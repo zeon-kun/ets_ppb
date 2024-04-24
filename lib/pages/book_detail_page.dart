@@ -57,6 +57,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    Image(image: MemoryImage(book.picture)),
                     Text(
                       DateFormat.yMd().format(book.createdTime),
                       style: const TextStyle(

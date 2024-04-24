@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ets_ppb/db/books_database.dart';
 import 'package:ets_ppb/model/books.dart';
+import 'package:image_field/image_field.dart';
 
 class AddEditBookPage extends StatefulWidget {
   final Book? book;
@@ -14,12 +15,14 @@ class _AddEditBookPageState extends State<AddEditBookPage> {
   final _formkey = GlobalKey<FormState>();
   late String onChangedTitle;
   late String onChangedDescription;
+  late String onChangedPicture;
 
   @override
   void initState() {
     super.initState();
     onChangedTitle = widget.book?.title ?? '';
     onChangedDescription = widget.book?.description ?? '';
+    onChangedPicture = (widget.book?.picture) ?? '';
   }
 
   @override
@@ -64,6 +67,33 @@ class _AddEditBookPageState extends State<AddEditBookPage> {
                     fontWeight: FontWeight.bold
                   ),
                 ),
+                                ImageField(
+                    texts: const {
+                      'fieldFormText': 'Upload to server',
+                      'titleText': 'Upload to server'
+                    },
+                    files:  != null
+                        ? remoteFiles!.map((image) {
+                            return ImageAndCaptionModel(
+                                file: image, caption: image.alt.toString());
+                          }).toList()
+                        : [],
+                    remoteImage: true,
+                    onUpload: (pickedFile,
+                                 controllerLinearProgressIndicator) async {
+                      dynamic fileUploaded = await uploadToServer(
+                        pickedFile,
+                        uploadProgress: (percent) {
+                          var uploadProgressPercentage = percent / 100;
+                          controllerLinearProgressIndicator!
+                              .updateProgress(uploadProgressPercentage);
+                        },
+                      );
+                      return fileUploaded;
+                    },
+                    onSave: (List<ImageAndCaptionModel>? imageAndCaptionList) {
+                      remoteFiles = imageAndCaptionList;
+                    }),
                 TextFormField(
                   maxLines: null,
                   initialValue: widget.book?.description,

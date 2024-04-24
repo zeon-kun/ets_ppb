@@ -36,7 +36,8 @@ class BooksDatabase {
       ${BookFields.id} $idType,
       ${BookFields.title} $textType,
       ${BookFields.description} $textType,
-      ${BookFields.createdTime} $textType
+      ${BookFields.createdTime} $textType,
+      ${BookFields.picture} BLOB,
     )
     ''');
   }
